@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@pixi/react": "^8.0.5",
     "framer-motion": "^12.40.0",
     "howler": "^2.2.4",
     "pixi.js": "^8.18.1",
