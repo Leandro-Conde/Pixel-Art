@@ -1,0 +1,81 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: monospace;
+  }
+  
+  .desktop {
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(
+      to bottom,
+      #1a0f2e,
+      #12041f
+    );
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .window {
+    width: 700px;
+  
+    background: #0f0f0f;
+  
+    border: 4px solid #8d6dff;
+  
+    box-shadow:
+      0 0 20px rgba(141,109,255,.4);
+  
+    color: white;
+  }
+  
+  .title-bar {
+    background: #8d6dff;
+  
+    padding: 8px;
+  
+    display: flex;
+  
+    justify-content: space-between;
+  
+    font-weight: bold;
+  }
+  
+  .scene {
+    height: 320px;
+  
+    border-top: 2px solid #8d6dff;
+    border-bottom: 2px solid #8d6dff;
+  
+    display: flex;
+  
+    justify-content: center;
+  
+    align-items: center;
+  
+    font-size: 24px;
+  }
+  
+  .controls {
+    padding: 15px;
+  
+    display: flex;
+  
+    gap: 10px;
+  
+    justify-content: center;
+  }
+  
+  .controls button {
+    background: #1f1f1f;
+  
+    border: 2px solid #8d6dff;
+  
+    color: white;
+  
+    padding: 10px 20px;
+  
+    cursor: pointer;
+  }
