@@ -1,22 +1,24 @@
-export const themes = {
-    rainyNight: {
-      name: "Rainy Night",
-      background: "rainy-night.gif",
-      weather: "rain",
-      transition: "fade",
-    },
-  
-    bedroom: {
-      name: "Bedroom",
-      background: "bedroom.gif",
-      weather: "none",
-      transition: "fade",
-    },
-  
-    synthwaveCity: {
-      name: "Synthwave City",
-      background: "synthwave-city.gif",
-      weather: "neon",
-      transition: "slide",
-    },
-  };
+export const themes = [
+  {
+    id: 1,
+    name: "Rainy Room",
+
+    background: "/themes/rainy-room.jpg",
+  },
+
+  {
+    id: 2,
+    name: "Synthwave",
+
+    background:
+      "https://picsum.photos/1200/700?random=2",
+  },
+
+  {
+    id: 3,
+    name: "Bedroom",
+
+    background:
+      "https://picsum.photos/1200/700?random=3",
+  },
+];

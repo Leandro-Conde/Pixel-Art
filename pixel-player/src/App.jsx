@@ -1,16 +1,31 @@
-import "./styles/retro.css";
-
-import Window from "./components/Window";
-import Scene from "./components/Scene";
-import MusicPlayer from "./components/MusicPlayer";
+import { useState } from "react";
+import { themes } from "./data/themes";
 
 function App() {
+  const [themeIndex, setThemeIndex] = useState(0);
+
+  const currentTheme = themes[themeIndex];
+
   return (
-    <div className="desktop">
-      <Window>
-        <Scene />
-        <MusicPlayer />
-      </Window>
+    <div
+      style={{
+        width: "100vw",
+        height: "100vh",
+
+        backgroundImage: `url(${currentTheme.background})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <button
+        onClick={() =>
+          setThemeIndex(
+            (themeIndex + 1) % themes.length
+          )
+        }
+      >
+        Trocar Tema
+      </button>
     </div>
   );
 }
