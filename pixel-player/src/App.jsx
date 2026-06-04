@@ -1,17 +1,32 @@
 import { useState } from "react";
 import { vibes } from "./data/vibes";
 import { scenes } from "./data/scenes";
-
 import Scene from "./components/Scene";
+
 
 function App() {
   const [currentVibe, setCurrentVibe] =
     useState(vibes[0]);
 
+    const [isFading, setIsFading] = useState(false);
+
   const currentScene = scenes.find(
     (scene) =>
       scene.id === currentVibe.sceneId
   );
+
+  const changeVibe = (newVibe) => {
+    setIsFading(true);
+  
+    setTimeout(() => {
+      setCurrentVibe(newVibe);
+  
+      setTimeout(() => {
+        setIsFading(false);
+      }, 50);
+  
+    }, 500);
+  };
 
   return (
     <div
@@ -24,7 +39,20 @@ function App() {
         overflow: "hidden",
       }}
     >
-      <Scene scene={currentScene} />
+        <div
+    style={{
+      opacity: isFading ? 0 : 1,
+      transition: "opacity 0.5s ease",
+      width: "100%",
+      height: "100%",
+    }}
+  >
+    <Scene
+  scene={currentScene}
+  vibe={currentVibe}
+/>
+
+</div>
 
       {/* TOPO */}
 
@@ -103,7 +131,7 @@ function App() {
           <button
             key={vibe.id}
             onClick={() =>
-              setCurrentVibe(vibe)
+              changeVibe(vibe)
             }
           >
             {vibe.name}

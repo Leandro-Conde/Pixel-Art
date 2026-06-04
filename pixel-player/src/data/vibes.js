@@ -5,6 +5,12 @@ export const vibes = [
     name: "Lonely Rain",
 
     sceneId: "rainy-room",
+
+    effects: {
+      rain: true,
+      lightning: true,
+      steam: true,
+    },
   },
 
   {
@@ -13,5 +19,11 @@ export const vibes = [
     name: "Night Drive",
 
     sceneId: "city-neon",
+
+    effects: {
+      rain: false,
+      lightning: false,
+      steam: false,
+    },
   },
 ];

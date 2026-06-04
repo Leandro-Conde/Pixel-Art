@@ -1,7 +1,11 @@
 import RainLayer from "./layers/RainLayer";
 import LightningLayer from "./layers/LightningLayer";
+import SteamLayer from "./layers/SteamLayer";
 
-export default function Scene({ scene }) {
+export default function Scene({
+  scene,
+  vibe,
+}) {
   return (
     <div
       style={{
@@ -26,11 +30,21 @@ export default function Scene({ scene }) {
 
       {/* CHUVA */}
 
-      <RainLayer />
+      {vibe.effects.rain && (
+  <RainLayer />
+)}
 
       {/* RELÂMPAGO */}
 
-      <LightningLayer />
+      {vibe.effects.lightning && (
+  <LightningLayer />
+)}
+
+      {/* Layers*/}
+
+      {vibe.effects.steam && (
+  <SteamLayer />
+)}
 
       {/* PERSONAGEM */}
 
