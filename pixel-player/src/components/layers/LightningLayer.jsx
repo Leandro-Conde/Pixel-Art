@@ -4,7 +4,7 @@ export default function LightningLayer() {
   const [flash, setFlash] = useState(false);
 
   useEffect(() => {
-    const triggerLightning = () => {
+    const startLoop = () => {
       const delay =
         5000 + Math.random() * 15000;
 
@@ -15,11 +15,11 @@ export default function LightningLayer() {
           setFlash(false);
         }, 120);
 
-        triggerLightning();
+        startLoop();
       }, delay);
     };
 
-    triggerLightning();
+    startLoop();
   }, []);
 
   return (
@@ -28,11 +28,16 @@ export default function LightningLayer() {
         position: "absolute",
         inset: 0,
 
-        background: "white",
+        background:
+          "radial-gradient(circle at center, rgba(255,255,255,0.7), transparent 70%)",
 
-        opacity: flash ? 0.35 : 0,
+        opacity: flash ? 1 : 0,
+
+        pointerEvents: "none",
 
         transition: "opacity 0.1s",
+
+        mixBlendMode: "screen",
       }}
     />
   );

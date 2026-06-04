@@ -1,3 +1,6 @@
+import RainLayer from "./layers/RainLayer";
+import LightningLayer from "./layers/LightningLayer";
+
 export default function Scene({ scene }) {
   return (
     <div
@@ -7,7 +10,7 @@ export default function Scene({ scene }) {
         overflow: "hidden",
       }}
     >
-      {/* Background */}
+      {/* BACKGROUND */}
 
       <img
         src={scene.layers.background}
@@ -21,7 +24,15 @@ export default function Scene({ scene }) {
         }}
       />
 
-      {/* Character */}
+      {/* CHUVA */}
+
+      <RainLayer />
+
+      {/* RELÂMPAGO */}
+
+      <LightningLayer />
+
+      {/* PERSONAGEM */}
 
       {scene.layers.character && (
         <img
@@ -37,7 +48,7 @@ export default function Scene({ scene }) {
         />
       )}
 
-      {/* Weather */}
+      {/* WEATHER */}
 
       {scene.layers.weather && (
         <img
@@ -54,7 +65,7 @@ export default function Scene({ scene }) {
         />
       )}
 
-      {/* Overlay */}
+      {/* OVERLAY */}
 
       {scene.layers.overlay && (
         <img
