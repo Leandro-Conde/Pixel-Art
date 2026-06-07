@@ -1,14 +1,22 @@
 import { useState } from "react";
+
 import { vibes } from "./data/vibes";
 import { scenes } from "./data/scenes";
-import Scene from "./components/Scene";
+import { songs } from "./data/songs";
 
+import Scene from "./components/Scene";
+import SongList from "./components/SongList";
+import SongPlayer from "./components/SongPlayer";
 
 function App() {
   const [currentVibe, setCurrentVibe] =
     useState(vibes[0]);
 
-    const [isFading, setIsFading] = useState(false);
+  const [currentSong, setCurrentSong] =
+    useState(songs[0]);
+
+  const [isFading, setIsFading] =
+    useState(false);
 
   const currentScene = scenes.find(
     (scene) =>
@@ -17,14 +25,14 @@ function App() {
 
   const changeVibe = (newVibe) => {
     setIsFading(true);
-  
+
     setTimeout(() => {
       setCurrentVibe(newVibe);
-  
+
       setTimeout(() => {
         setIsFading(false);
       }, 50);
-  
+
     }, 500);
   };
 
@@ -33,41 +41,35 @@ function App() {
       style={{
         width: "100vw",
         height: "100vh",
-
         position: "relative",
-
         overflow: "hidden",
       }}
     >
-        <div
-    style={{
-      opacity: isFading ? 0 : 1,
-      transition: "opacity 0.5s ease",
-      width: "100%",
-      height: "100%",
-    }}
-  >
-    <Scene
-  scene={currentScene}
-  vibe={currentVibe}
-/>
+      {/* CENA */}
 
-</div>
+      <div
+        style={{
+          opacity: isFading ? 0 : 1,
+          transition: "opacity 0.5s ease",
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <Scene
+          scene={currentScene}
+          vibe={currentVibe}
+        />
+      </div>
 
       {/* TOPO */}
 
       <div
         style={{
           position: "relative",
-
           zIndex: 10,
-
           padding: "20px",
-
           color: "white",
-
           fontSize: "24px",
-
           fontWeight: "bold",
         }}
       >
@@ -76,67 +78,72 @@ function App() {
 
       {/* CENTRO */}
 
-      <div
-        style={{
-          position: "relative",
+<div
+  style={{
+    position: "absolute",
 
-          zIndex: 10,
+    top: "50%",
 
-          display: "flex",
+    left: "50%",
 
-          justifyContent: "center",
+    transform: "translate(-50%, -50%)",
 
-          marginTop: "100px",
-        }}
-      >
-        <div
-          style={{
-            width: "500px",
+    zIndex: 999,
+  }}
+>
+  <div
+    style={{
+      width: "500px",
 
-            background: "rgba(0,0,0,0.7)",
+      background: "rgba(0,0,0,0.7)",
 
-            color: "white",
+      color: "white",
 
-            padding: "20px",
+      padding: "20px",
 
-            borderRadius: "10px",
-          }}
-        >
-          <h2>{currentVibe.name}</h2>
+      borderRadius: "10px",
+    }}
+  >
+    <h2>{currentSong.title}</h2>
 
-          <p>
-            Cena atual: {currentScene.id}
-          </p>
-        </div>
-      </div>
+    <p>
+      Vibe: {currentVibe.name}
+    </p>
 
-      {/* RODAPÉ */}
+    <p>
+      Cena atual: {currentScene.id}
+    </p>
+
+    <SongPlayer
+      song={currentSong}
+    />
+  </div>
+</div>
+
+      {/* LISTA DE MÚSICAS */}
 
       <div
         style={{
           position: "absolute",
-
           bottom: "20px",
-
           left: "20px",
-
-          display: "flex",
-
-          gap: "10px",
-
           zIndex: 10,
         }}
       >
-        {vibes.map((vibe) => (
-          <button
-            key={vibe.id}
-            onClick={() =>
-              changeVibe(vibe)
+        <SongList
+          songs={songs}
+          onSelect={(song) => {
+            setCurrentSong(song);
+
+            const vibe = vibes.find(
+              (v) => v.id === song.vibeId
+            );
+
+            if (vibe) {
+              changeVibe(vibe);
             }
-          >
-            {vibe.name}
-          </button>
-        ))}
+          }}
+        />
       </div>
     </div>
   );

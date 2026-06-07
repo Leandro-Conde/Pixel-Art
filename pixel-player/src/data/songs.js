@@ -1,15 +1,25 @@
 export const songs = [
   {
     id: 1,
-    title: "After Midnight",
+
+    title: "Rain Again",
+
     artist: "Example Artist",
-    vibeId: "night-drive",
+
+    vibeId: "lonely-rain",
+
+    file: "/music/rain-again.mp3",
   },
 
   {
     id: 2,
-    title: "Rain Again",
+
+    title: "After Midnight",
+
     artist: "Example Artist",
-    vibeId: "lonely-rain",
+
+    vibeId: "night-drive",
+
+    file: "/music/after-midnight.mp3",
   },
 ];
