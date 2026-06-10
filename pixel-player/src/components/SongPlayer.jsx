@@ -4,25 +4,49 @@ import { useState } from "react";
 export default function SongPlayer({ song }) {
   const [sound, setSound] = useState(null);
 
-  const playSong = () => {
+  const [status, setStatus] =
+    useState("Parado");
+
+    const playSong = () => {
+      if (sound) {
+    
+        if (sound.playing()) {
+          return;
+        }
+    
+        sound.play();
+    
+        setStatus("Tocando");
+    
+        return;
+      }
+    
+      const newSound = new Howl({
+        src: [song.file],
+        html5: true,
+        volume: 0.7,
+      });
+    
+      newSound.play();
+    
+      setSound(newSound);
+    
+      setStatus("Tocando");
+    };
+
+  const pauseSong = () => {
     if (sound) {
-      sound.stop();
+      sound.pause();
+
+      setStatus("Pausado");
     }
-
-    const newSound = new Howl({
-      src: [song.file],
-      html5: true,
-      volume: 0.7,
-    });
-
-    newSound.play();
-
-    setSound(newSound);
   };
 
   const stopSong = () => {
     if (sound) {
       sound.stop();
+
+      setStatus("Parado");
     }
   };
 
@@ -30,17 +54,34 @@ export default function SongPlayer({ song }) {
     <div
       style={{
         marginTop: "15px",
-        display: "flex",
-        gap: "10px",
       }}
     >
-      <button onClick={playSong}>
-        ▶ Play
-      </button>
+      <div
+        style={{
+          marginBottom: "10px",
+        }}
+      >
+        Status: {status}
+      </div>
 
-      <button onClick={stopSong}>
-        ⏹ Stop
-      </button>
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+        }}
+      >
+        <button onClick={playSong}>
+          ▶ Play
+        </button>
+
+        <button onClick={pauseSong}>
+          ⏸ Pause
+        </button>
+
+        <button onClick={stopSong}>
+          ⏹ Stop
+        </button>
+      </div>
     </div>
   );
 }
