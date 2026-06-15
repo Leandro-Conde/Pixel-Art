@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Howl } from "howler";
 
 import { vibes } from "./data/vibes";
 import { scenes } from "./data/scenes";
@@ -14,6 +15,15 @@ function App() {
 
   const [currentSong, setCurrentSong] =
     useState(songs[0]);
+
+  const [sound, setSound] =
+    useState(null);
+
+  const [status, setStatus] =
+    useState("Parado");
+
+  const [volume, setVolume] =
+    useState(0.7);
 
   const [isFading, setIsFading] =
     useState(false);
@@ -34,6 +44,49 @@ function App() {
       }, 50);
 
     }, 500);
+  };
+
+  const playSong = () => {
+    if (sound) {
+
+      if (sound.playing()) {
+        return;
+      }
+
+      sound.play();
+
+      setStatus("Tocando");
+
+      return;
+    }
+
+    const newSound = new Howl({
+      src: [currentSong.file],
+      html5: true,
+      volume,
+    });
+
+    newSound.play();
+
+    setSound(newSound);
+
+    setStatus("Tocando");
+  };
+
+  const pauseSong = () => {
+    if (sound) {
+      sound.pause();
+
+      setStatus("Pausado");
+    }
+  };
+
+  const stopSong = () => {
+    if (sound) {
+      sound.stop();
+
+      setStatus("Parado");
+    }
   };
 
   return (
@@ -78,47 +131,74 @@ function App() {
 
       {/* CENTRO */}
 
-<div
-  style={{
-    position: "absolute",
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          zIndex: 999,
+        }}
+      >
+        <div
+          style={{
+            width: "500px",
+            background: "rgba(0,0,0,0.7)",
+            color: "white",
+            padding: "20px",
+            borderRadius: "10px",
+          }}
+        >
+          <h2>{currentSong.title}</h2>
 
-    top: "50%",
+          <p>
+            Vibe: {currentVibe.name}
+          </p>
 
-    left: "50%",
+          <p>
+            Cena atual: {currentScene.id}
+          </p>
 
-    transform: "translate(-50%, -50%)",
+          <SongPlayer
+            status={status}
+            onPlay={playSong}
+            onPause={pauseSong}
+            onStop={stopSong}
+          />
 
-    zIndex: 999,
-  }}
->
-  <div
-    style={{
-      width: "500px",
+          <div
+            style={{
+              marginTop: "15px",
+            }}
+          >
+            <div>
+              🔊 {Math.round(volume * 100)}%
+            </div>
 
-      background: "rgba(0,0,0,0.7)",
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={(e) => {
+                const newVolume =
+                  Number(e.target.value);
 
-      color: "white",
+                setVolume(newVolume);
 
-      padding: "20px",
-
-      borderRadius: "10px",
-    }}
-  >
-    <h2>{currentSong.title}</h2>
-
-    <p>
-      Vibe: {currentVibe.name}
-    </p>
-
-    <p>
-      Cena atual: {currentScene.id}
-    </p>
-
-    <SongPlayer
-      song={currentSong}
-    />
-  </div>
-</div>
+                if (sound) {
+                  sound.volume(newVolume);
+                }
+              }}
+              style={{
+                width: "100%",
+                marginTop: "5px",
+              }}
+            />
+          </div>
+        </div>
+      </div>
 
       {/* LISTA DE MÚSICAS */}
 
@@ -133,6 +213,23 @@ function App() {
         <SongList
           songs={songs}
           onSelect={(song) => {
+
+            if (sound) {
+              sound.stop();
+            }
+
+            const newSound = new Howl({
+              src: [song.file],
+              html5: true,
+              volume,
+            });
+
+            newSound.play();
+
+            setSound(newSound);
+
+            setStatus("Tocando");
+
             setCurrentSong(song);
 
             const vibe = vibes.find(

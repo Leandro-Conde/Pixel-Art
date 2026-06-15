@@ -1,55 +1,9 @@
-import { Howl } from "howler";
-import { useState } from "react";
-
-export default function SongPlayer({ song }) {
-  const [sound, setSound] = useState(null);
-
-  const [status, setStatus] =
-    useState("Parado");
-
-    const playSong = () => {
-      if (sound) {
-    
-        if (sound.playing()) {
-          return;
-        }
-    
-        sound.play();
-    
-        setStatus("Tocando");
-    
-        return;
-      }
-    
-      const newSound = new Howl({
-        src: [song.file],
-        html5: true,
-        volume: 0.7,
-      });
-    
-      newSound.play();
-    
-      setSound(newSound);
-    
-      setStatus("Tocando");
-    };
-
-  const pauseSong = () => {
-    if (sound) {
-      sound.pause();
-
-      setStatus("Pausado");
-    }
-  };
-
-  const stopSong = () => {
-    if (sound) {
-      sound.stop();
-
-      setStatus("Parado");
-    }
-  };
-
+export default function SongPlayer({
+  status,
+  onPlay,
+  onPause,
+  onStop,
+}) {
   return (
     <div
       style={{
@@ -70,15 +24,15 @@ export default function SongPlayer({ song }) {
           gap: "10px",
         }}
       >
-        <button onClick={playSong}>
+        <button onClick={onPlay}>
           ▶ Play
         </button>
 
-        <button onClick={pauseSong}>
+        <button onClick={onPause}>
           ⏸ Pause
         </button>
 
-        <button onClick={stopSong}>
+        <button onClick={onStop}>
           ⏹ Stop
         </button>
       </div>
