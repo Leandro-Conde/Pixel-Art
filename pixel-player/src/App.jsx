@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Howl } from "howler";
+
 
 import { vibes } from "./data/vibes";
 import { scenes } from "./data/scenes";
@@ -10,6 +11,7 @@ import SongList from "./components/SongList";
 import SongPlayer from "./components/SongPlayer";
 
 function App() {
+  
   const [currentVibe, setCurrentVibe] =
     useState(vibes[0]);
 
@@ -27,6 +29,12 @@ function App() {
 
   const [isFading, setIsFading] =
     useState(false);
+
+    const [currentTime, setCurrentTime] =
+  useState(0);
+
+const [duration, setDuration] =
+  useState(0);
 
   const currentScene = scenes.find(
     (scene) =>
@@ -88,6 +96,18 @@ function App() {
       setStatus("Parado");
     }
   };
+
+  useEffect(() => {
+    if (!sound) return;
+  
+    const interval = setInterval(() => {
+      setCurrentTime(sound.seek() || 0);
+  
+      setDuration(sound.duration() || 0);
+    }, 500);
+  
+    return () => clearInterval(interval);
+  }, [sound]);
 
   return (
     <div
@@ -161,6 +181,8 @@ function App() {
 
           <SongPlayer
             status={status}
+            currentTime={currentTime}
+            duration={duration}
             onPlay={playSong}
             onPause={pauseSong}
             onStop={stopSong}
