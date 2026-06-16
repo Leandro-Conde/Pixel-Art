@@ -9,6 +9,8 @@ export const songs = [
     vibeId: "lonely-rain",
 
     file: "/music/rain-again.mp3",
+
+    cover: "/covers/rain-again.jpg",
   },
 
   {
@@ -21,5 +23,7 @@ export const songs = [
     vibeId: "night-drive",
 
     file: "/music/after-midnight.mp3",
+
+    cover: "/covers/after-midnight.jpg",
   },
 ];

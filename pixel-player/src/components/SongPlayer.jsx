@@ -5,6 +5,9 @@ export default function SongPlayer({
   onPlay,
   onPause,
   onStop,
+  onSeek,
+  onNext,
+  onPrev,
 }) {
 
   const formatTime = (seconds) => {
@@ -44,17 +47,42 @@ export default function SongPlayer({
           gap: "10px",
         }}
       >
+        <button onClick={onPrev}>
+          ⏮
+        </button>
+
         <button onClick={onPlay}>
-          ▶ Play
+          ▶
         </button>
 
         <button onClick={onPause}>
-          ⏸ Pause
+          ⏸
         </button>
 
         <button onClick={onStop}>
-          ⏹ Stop
+          ⏹
         </button>
+
+        <button onClick={onNext}>
+          ⏭
+        </button>
+
+        <button
+    onClick={() =>
+        setShuffle(!shuffle)
+      }
+    >
+      🔀
+    </button>
+    
+    <button
+    onClick={() =>
+      setRepeat(!repeat)
+    }
+  >
+    🔁
+  </button>
+
       </div>
 
       <div
@@ -68,6 +96,21 @@ export default function SongPlayer({
       </div>
 
       <div
+
+onClick={(e) => {
+
+  const rect =
+    e.currentTarget.getBoundingClientRect();
+
+  const clickX =
+    e.clientX - rect.left;
+
+  const percentage =
+    (clickX / rect.width) * 100;
+
+  onSeek(percentage);
+}}
+
         style={{
           width: "100%",
           height: "10px",
@@ -75,6 +118,7 @@ export default function SongPlayer({
           borderRadius: "5px",
           overflow: "hidden",
           marginTop: "8px",
+          cursor: "pointer",
         }}
       >
         <div

@@ -11,6 +11,12 @@ import SongList from "./components/SongList";
 import SongPlayer from "./components/SongPlayer";
 
 function App() {
+
+  const [repeat, setRepeat] =
+  useState(false);
+
+  const [shuffle, setShuffle] =
+  useState(false);
   
   const [currentVibe, setCurrentVibe] =
     useState(vibes[0]);
@@ -97,7 +103,100 @@ const [duration, setDuration] =
     }
   };
 
+  const seekSong = (percentage) => {
+    if (!sound || !duration) return;
+  
+    const newTime =
+      (percentage / 100) * duration;
+  
+    sound.seek(newTime);
+  
+    setCurrentTime(newTime);
+  };
+
+  const prevSong = () => {
+
+    const currentIndex =
+      songs.findIndex(
+        (song) =>
+          song.id === currentSong.id
+      );
+  
+    const prevIndex =
+      currentIndex === 0
+        ? songs.length - 1
+        : currentIndex - 1;
+  
+    const prev =
+      songs[prevIndex];
+  
+    if (sound) {
+      sound.stop();
+    }
+  
+    const newSound = new Howl({
+      src: [prev.file],
+      html5: true,
+      volume,
+    });
+  
+    newSound.play();
+  
+    setSound(newSound);
+  
+    setCurrentSong(prev);
+  
+    setStatus("Tocando");
+  
+    const vibe = vibes.find(
+      (v) =>
+        v.id === prev.vibeId
+    );
+  
+    if (vibe) {
+      changeVibe(vibe);
+    }
+  };
+
   useEffect(() => {
+
+    if (!sound) return;
+
+sound.once("end", () => {
+  nextSong();
+
+  if (shuffle) {
+
+    const randomIndex =
+      Math.floor(
+        Math.random() *
+        songs.length
+      );
+  
+    next = songs[randomIndex];
+  
+  } else {
+  
+    const nextIndex =
+      (currentIndex + 1) %
+      songs.length;
+  
+    next = songs[nextIndex];
+  }
+
+  sound.once("end", () => {
+
+    if (repeat) {
+  
+      sound.play();
+  
+      return;
+    }
+  
+    nextSong();
+  });
+});
+
     if (!sound) return;
   
     const interval = setInterval(() => {
@@ -108,6 +207,49 @@ const [duration, setDuration] =
   
     return () => clearInterval(interval);
   }, [sound]);
+
+  const nextSong = () => {
+
+    const currentIndex =
+      songs.findIndex(
+        (song) =>
+          song.id === currentSong.id
+      );
+  
+    const nextIndex =
+      (currentIndex + 1) %
+      songs.length;
+  
+    const next =
+      songs[nextIndex];
+  
+    if (sound) {
+      sound.stop();
+    }
+  
+    const newSound = new Howl({
+      src: [next.file],
+      html5: true,
+      volume,
+    });
+  
+    newSound.play();
+  
+    setSound(newSound);
+  
+    setCurrentSong(next);
+  
+    setStatus("Tocando");
+  
+    const vibe = vibes.find(
+      (v) =>
+        v.id === next.vibeId
+    );
+  
+    if (vibe) {
+      changeVibe(vibe);
+    }
+  };
 
   return (
     <div
@@ -169,6 +311,17 @@ const [duration, setDuration] =
             borderRadius: "10px",
           }}
         >
+
+      <img
+          src={currentSong.cover}
+          alt=""
+          style={{
+            width: "100%",
+            borderRadius: "10px",
+            marginBottom: "15px",
+          }}
+        />
+
           <h2>{currentSong.title}</h2>
 
           <p>
@@ -186,6 +339,9 @@ const [duration, setDuration] =
             onPlay={playSong}
             onPause={pauseSong}
             onStop={stopSong}
+            onSeek={seekSong}
+            onNext={nextSong}
+            onPrev={prevSong}
           />
 
           <div
