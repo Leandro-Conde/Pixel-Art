@@ -161,67 +161,119 @@ const [duration, setDuration] =
   useEffect(() => {
 
     if (!sound) return;
-
-sound.once("end", () => {
-  nextSong();
-
-  if (shuffle) {
-
-    const randomIndex =
-      Math.floor(
-        Math.random() *
-        songs.length
-      );
   
-    next = songs[randomIndex];
+    sound.once("end", () => {
   
-  } else {
+      if (repeat) {
   
-    const nextIndex =
-      (currentIndex + 1) %
-      songs.length;
+        sound.play();
   
-    next = songs[nextIndex];
-  }
-
-  sound.once("end", () => {
-
-    if (repeat) {
+        return;
+      }
   
-      sound.play();
-  
-      return;
-    }
-  
-    nextSong();
-  });
-});
-
-    if (!sound) return;
+      nextSong();
+    });
   
     const interval = setInterval(() => {
-      setCurrentTime(sound.seek() || 0);
   
-      setDuration(sound.duration() || 0);
+      setCurrentTime(
+        sound.seek() || 0
+      );
+  
+      setDuration(
+        sound.duration() || 0
+      );
+  
     }, 500);
   
-    return () => clearInterval(interval);
-  }, [sound]);
+    return () => {
+      clearInterval(interval);
+    };
+    
+  }, [
+    sound,
+    repeat,
+    shuffle,
+    currentSong
+  ]);
+
+  useEffect(() => {
+
+    const handleKeyDown = (e) => {
+  
+      if (e.code === "Space") {
+  
+        e.preventDefault();
+  
+        if (
+          sound &&
+          sound.playing()
+        ) {
+          pauseSong();
+        } else {
+          playSong();
+        }
+      }
+  
+      if (e.code === "ArrowRight") {
+        nextSong();
+      }
+  
+      if (e.code === "ArrowLeft") {
+        prevSong();
+      }
+    };
+  
+    window.addEventListener(
+      "keydown",
+      handleKeyDown
+    );
+  
+    return () => {
+  
+      window.removeEventListener(
+        "keydown",
+        handleKeyDown
+      );
+    };
+  
+  }, [
+    sound,
+    currentSong,
+    shuffle,
+    repeat
+  ]);
 
   const nextSong = () => {
 
-    const currentIndex =
-      songs.findIndex(
-        (song) =>
-          song.id === currentSong.id
-      );
+    let next;
   
-    const nextIndex =
-      (currentIndex + 1) %
-      songs.length;
+    if (shuffle) {
   
-    const next =
-      songs[nextIndex];
+      const randomIndex =
+        Math.floor(
+          Math.random() *
+          songs.length
+        );
+  
+      next =
+        songs[randomIndex];
+  
+    } else {
+  
+      const currentIndex =
+        songs.findIndex(
+          (song) =>
+            song.id === currentSong.id
+        );
+  
+      const nextIndex =
+        (currentIndex + 1) %
+        songs.length;
+  
+      next =
+        songs[nextIndex];
+    }
   
     if (sound) {
       sound.stop();
@@ -322,15 +374,40 @@ sound.once("end", () => {
           }}
         />
 
-          <h2>{currentSong.title}</h2>
+          <h2>
+            {currentSong.title}
+          </h2>
+
+          <p
+            style={{
+              opacity: 0.8,
+              marginTop: "-10px",
+              marginBottom: "15px",
+            }}
+          >
+            {currentSong.artist}
+          </p>
 
           <p>
             Vibe: {currentVibe.name}
           </p>
 
           <p>
-            Cena atual: {currentScene.id}
+            Cena:
+            {" "}
+            {currentScene.name}
           </p>
+
+          <p>
+            Faixa {
+              songs.findIndex(
+                (song) =>
+                  song.id === currentSong.id
+              ) + 1
+            }
+            {" de "}
+            {songs.length}
+         </p>
 
           <SongPlayer
             status={status}
@@ -390,6 +467,7 @@ sound.once("end", () => {
       >
         <SongList
           songs={songs}
+          currentSong={currentSong}
           onSelect={(song) => {
 
             if (sound) {
