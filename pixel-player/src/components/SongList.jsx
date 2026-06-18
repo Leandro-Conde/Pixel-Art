@@ -35,7 +35,21 @@ export default function SongList({
 
               textAlign: "left",
             }}
+
           >
+
+<button
+  key={song.id}
+  onClick={() => onSelect(song)}
+  className={
+    song.id === currentSong.id
+      ? "active-song"
+      : ""
+  }
+>
+  {song.title}
+</button>
+
             {isCurrent
               ? "▶ "
               : ""}

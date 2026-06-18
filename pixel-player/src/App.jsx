@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Howl } from "howler";
+import "./styles/App.css";
 
 
 import { vibes } from "./data/vibes";
@@ -11,6 +12,9 @@ import SongList from "./components/SongList";
 import SongPlayer from "./components/SongPlayer";
 
 function App() {
+
+  const [showPlaylist, setShowPlaylist] =
+  useState(true);
 
   const [repeat, setRepeat] =
   useState(false);
@@ -355,14 +359,7 @@ const [duration, setDuration] =
         }}
       >
         <div
-          style={{
-            width: "500px",
-            background: "rgba(0,0,0,0.7)",
-            color: "white",
-            padding: "20px",
-            borderRadius: "10px",
-          }}
-        >
+          className="player-card">
 
       <img
           src={currentSong.cover}
@@ -457,47 +454,51 @@ const [duration, setDuration] =
 
       {/* LISTA DE MÚSICAS */}
 
-      <div
-        style={{
-          position: "absolute",
-          bottom: "20px",
-          left: "20px",
-          zIndex: 10,
+{
+  showPlaylist && (
+    <div
+      style={{
+        position: "absolute",
+        bottom: "20px",
+        left: "20px",
+        zIndex: 10,
+      }}
+    >
+      <SongList
+        songs={songs}
+        currentSong={currentSong}
+        onSelect={(song) => {
+
+          if (sound) {
+            sound.stop();
+          }
+
+          const newSound = new Howl({
+            src: [song.file],
+            html5: true,
+            volume,
+          });
+
+          newSound.play();
+
+          setSound(newSound);
+
+          setStatus("Tocando");
+
+          setCurrentSong(song);
+
+          const vibe = vibes.find(
+            (v) => v.id === song.vibeId
+          );
+
+          if (vibe) {
+            changeVibe(vibe);
+          }
         }}
-      >
-        <SongList
-          songs={songs}
-          currentSong={currentSong}
-          onSelect={(song) => {
-
-            if (sound) {
-              sound.stop();
-            }
-
-            const newSound = new Howl({
-              src: [song.file],
-              html5: true,
-              volume,
-            });
-
-            newSound.play();
-
-            setSound(newSound);
-
-            setStatus("Tocando");
-
-            setCurrentSong(song);
-
-            const vibe = vibes.find(
-              (v) => v.id === song.vibeId
-            );
-
-            if (vibe) {
-              changeVibe(vibe);
-            }
-          }}
-        />
-      </div>
+      />
+    </div>
+  )
+}
     </div>
   );
 }

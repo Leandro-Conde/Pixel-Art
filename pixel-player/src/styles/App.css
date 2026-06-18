@@ -1,0 +1,79 @@
+.player-card {
+    width: min(
+        500px,
+        90vw
+      );
+
+    background: rgba(255,255,255,0.08);
+
+backdrop-filter: blur(15px);
+
+border: 1px solid rgba(
+  255,
+  255,
+  255,
+  0.15
+);
+
+box-shadow:
+  0 8px 32px
+  rgba(0,0,0,0.35);
+
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  button {
+
+    border: none;
+  
+    padding: 10px 15px;
+  
+    border-radius: 8px;
+  
+    cursor: pointer;
+  
+    transition: 0.2s;
+  }
+  
+  button:hover {
+  
+    transform: scale(1.05);
+  }
+
+  .current-song {
+
+    background: rgba(
+      255,
+      255,
+      255,
+      0.15
+    );
+  
+    border-left:
+      4px solid #4caf50;
+  }
+
+  .active-song {
+    border: 2px solid #4caf50;
+    transform: scale(1.05);
+  }
+
+  .spinning {
+    animation:
+      rotateDisc
+      10s
+      linear
+      infinite;
+  }
+  
+  @keyframes rotateDisc {
+    from {
+      transform: rotate(0deg);
+    }
+  
+    to {
+      transform: rotate(360deg);
+    }
+  }

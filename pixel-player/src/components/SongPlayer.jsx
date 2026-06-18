@@ -68,6 +68,14 @@ export default function SongPlayer({
         </button>
 
         <button
+          onClick={() =>
+            setShowPlaylist(!showPlaylist)
+          }
+        >
+          🎵
+        </button>
+
+        <button
     onClick={() =>
         setShuffle(!shuffle)
       }
