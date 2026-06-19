@@ -47,6 +47,7 @@ export default function SongPlayer({
           gap: "10px",
         }}
       >
+        <div className="player-btn">
         <button onClick={onPrev}>
           ⏮
         </button>
@@ -90,6 +91,8 @@ export default function SongPlayer({
   >
     🔁
   </button>
+
+  </div>
 
       </div>
 

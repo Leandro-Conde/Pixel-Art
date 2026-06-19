@@ -11,11 +11,15 @@ import Scene from "./components/Scene";
 import SongList from "./components/SongList";
 import SongPlayer from "./components/SongPlayer";
 
+
 function App() {
-
+  
+  const [showPlayer, setShowPlayer] =
+    useState(false);
+  
   const [showPlaylist, setShowPlaylist] =
-  useState(true);
-
+    useState(false);
+ 
   const [repeat, setRepeat] =
   useState(false);
 
@@ -43,7 +47,7 @@ function App() {
     const [currentTime, setCurrentTime] =
   useState(0);
 
-const [duration, setDuration] =
+  const [duration, setDuration] =
   useState(0);
 
   const currentScene = scenes.find(
@@ -307,30 +311,51 @@ const [duration, setDuration] =
     }
   };
 
+  const hidePanels = () => {
+
+    setShowPlayer(false);
+  
+    setShowPlaylist(false);
+  };
+
   return (
-    <div
-      style={{
-        width: "100vw",
-        height: "100vh",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
+    <div className="app-layout">
+
+<div
+  className="bottom-hotspot"
+  onMouseEnter={() =>
+    setShowPlayer(true)
+  }
+/>
+
+<div
+  className="right-hotspot"
+  onMouseEnter={() =>
+    setShowPlaylist(true)
+  }
+/>
       {/* CENA */}
 
       <div
-        style={{
-          opacity: isFading ? 0 : 1,
-          transition: "opacity 0.5s ease",
-          width: "100%",
-          height: "100%",
-        }}
-      >
-        <Scene
-          scene={currentScene}
-          vibe={currentVibe}
-        />
-      </div>
+  className="scene-area"
+  onMouseMove={hidePanels}
+>
+
+  <div
+    style={{
+      opacity: isFading ? 0 : 1,
+      transition: "opacity 0.5s ease",
+      width: "100%",
+      height: "100%",
+    }}
+  >
+    <Scene
+      scene={currentScene}
+      vibe={currentVibe}
+    />
+  </div>
+
+  </div>
 
       {/* TOPO */}
 
@@ -350,61 +375,59 @@ const [duration, setDuration] =
       {/* CENTRO */}
 
       <div
+        className={
+          showPlayer
+            ? "player-panel open"
+            : "player-panel"
+        }
+        onMouseEnter={() =>
+          setShowPlayer(true)
+        }
+      >
+      
+      <div
+        className="player-card"
         style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          zIndex: 999,
+          width:"100%",
+          height:"100%",
         }}
       >
-        <div
-          className="player-card">
 
-      <img
-          src={currentSong.cover}
-          alt=""
-          style={{
-            width: "100%",
-            borderRadius: "10px",
-            marginBottom: "15px",
-          }}
-        />
+  <div
+  style={{
+    display:"flex",
+    gap:"20px",
+    alignItems:"flex-start"
+  }}
+  >
 
-          <h2>
-            {currentSong.title}
-          </h2>
+  <img
+    className="album-cover"
+    src={currentSong.cover}
+    alt=""
+  />
 
-          <p
-            style={{
-              opacity: 0.8,
-              marginTop: "-10px",
-              marginBottom: "15px",
-            }}
-          >
-            {currentSong.artist}
-          </p>
+  <div>
 
-          <p>
-            Vibe: {currentVibe.name}
-          </p>
+    <h2>{currentSong.title}</h2>
 
-          <p>
-            Cena:
-            {" "}
-            {currentScene.name}
-          </p>
+    <p>{currentSong.artist}</p>
 
-          <p>
-            Faixa {
-              songs.findIndex(
-                (song) =>
-                  song.id === currentSong.id
-              ) + 1
-            }
-            {" de "}
-            {songs.length}
-         </p>
+    <p>Vibe: {currentVibe.name}</p>
+
+    <p>Cena: {currentScene.name}</p>
+
+    <p>
+      Faixa {
+        songs.findIndex(
+          song => song.id === currentSong.id
+        ) + 1
+      } de {songs.length}
+    </p>
+
+  </div>
+
+  </div>
 
           <SongPlayer
             status={status}
@@ -454,16 +477,19 @@ const [duration, setDuration] =
 
       {/* LISTA DE MÚSICAS */}
 
-{
-  showPlaylist && (
+  {
+
     <div
-      style={{
-        position: "absolute",
-        bottom: "20px",
-        left: "20px",
-        zIndex: 10,
-      }}
-    >
+    className={
+      showPlaylist
+        ? "playlist-panel open"
+        : "playlist-panel"
+    }
+    onMouseEnter={() =>
+      setShowPlaylist(true)
+    }
+  >
+
       <SongList
         songs={songs}
         currentSong={currentSong}
@@ -497,8 +523,8 @@ const [duration, setDuration] =
         }}
       />
     </div>
-  )
-}
+
+  }
     </div>
   );
 }
