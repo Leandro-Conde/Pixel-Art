@@ -13,6 +13,21 @@ import SongPlayer from "./components/SongPlayer";
 
 
 function App() {
+
+const [showVibe, setShowVibe] =
+  useState(true);
+
+const [showScene, setShowScene] =
+  useState(true);
+  
+  const [showClock, setShowClock] =
+  useState(true);
+
+  const [clock, setClock] =
+  useState("");
+
+  const [showSettings, setShowSettings] =
+  useState(false);
   
   const [showPlayer, setShowPlayer] =
     useState(false);
@@ -165,6 +180,23 @@ function App() {
       changeVibe(vibe);
     }
   };
+
+  useEffect(() => {
+
+    const interval =
+      setInterval(() => {
+  
+        setClock(
+          new Date()
+            .toLocaleTimeString()
+        );
+  
+      }, 1000);
+  
+    return () =>
+      clearInterval(interval);
+  
+  }, []);
 
   useEffect(() => {
 
@@ -407,15 +439,27 @@ function App() {
     alt=""
   />
 
-  <div>
+<div className="player-info">
 
     <h2>{currentSong.title}</h2>
 
     <p>{currentSong.artist}</p>
 
-    <p>Vibe: {currentVibe.name}</p>
+    {
+  showVibe && (
+    <p>
+      Vibe: {currentVibe.name}
+    </p>
+  )
+}
 
-    <p>Cena: {currentScene.name}</p>
+{
+  showScene && (
+    <p>
+      Cena: {currentScene.name}
+    </p>
+  )
+}
 
     <p>
       Faixa {
@@ -440,6 +484,16 @@ function App() {
             onNext={nextSong}
             onPrev={prevSong}
           />
+
+        <div className="equalizer">
+
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+        </div>
 
           <div
             style={{
@@ -472,6 +526,70 @@ function App() {
               }}
             />
           </div>
+
+          <div
+            className="settings-button"
+            onClick={() =>
+              setShowSettings(
+                !showSettings
+              )
+            }
+          >
+            ⚙️
+          </div>
+
+          {
+  showSettings && (
+
+    <div className="settings-panel">
+
+      <h3>
+        Configurações
+      </h3>
+
+      <button
+        onClick={() =>
+          setShowClock(
+            !showClock
+          )
+        }
+      >
+        Relógio
+      </button>
+
+      <button
+        onClick={() =>
+          setShowVibe(
+            !showVibe
+          )
+        }
+      >
+        Vibe
+      </button>
+
+      <button
+        onClick={() =>
+          setShowScene(
+            !showScene
+          )
+        }
+      >
+        Cena
+      </button>
+
+    </div>
+
+  )
+}
+
+{
+  showClock && (
+    <div className="pixel-clock">
+      {clock}
+    </div>
+  )
+}
+
         </div>
       </div>
 
@@ -488,7 +606,8 @@ function App() {
     onMouseEnter={() =>
       setShowPlaylist(true)
     }
-  >
+  
+   >
 
       <SongList
         songs={songs}
