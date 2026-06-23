@@ -14,6 +14,9 @@ import SongPlayer from "./components/SongPlayer";
 
 function App() {
 
+  const [theme, setTheme] =
+  useState("gameboy");
+
 const [showVibe, setShowVibe] =
   useState(true);
 
@@ -470,6 +473,14 @@ const [showScene, setShowScene] =
     </p>
 
   </div>
+
+  <div
+  className={
+    status === "Tocando"
+      ? "equalizer playing"
+      : "equalizer"
+  }
+></div>
 
   </div>
 
