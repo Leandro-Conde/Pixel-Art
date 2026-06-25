@@ -352,9 +352,12 @@ const [showScene, setShowScene] =
   
     setShowPlaylist(false);
   };
+  
 
   return (
     <div className="app-layout">
+
+
 
 <div
   className="bottom-hotspot"
@@ -496,6 +499,13 @@ const [showScene, setShowScene] =
             onPrev={prevSong}
           />
 
+        
+            <Scene
+              scene={currentScene}
+              vibe={currentVibe}
+            />
+          </div>
+
         <div className="equalizer">
 
         <div></div>
@@ -593,6 +603,14 @@ const [showScene, setShowScene] =
   )
 }
 
+<div
+            className={
+              isFading
+                ? "scene-container fade-out"
+                : "scene-container fade-in"
+            }
+          >
+
 {
   showClock && (
     <div className="pixel-clock">
@@ -655,6 +673,7 @@ const [showScene, setShowScene] =
     </div>
 
   }
+  
     </div>
   );
 }

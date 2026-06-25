@@ -53,6 +53,21 @@ body{
   overflow:hidden;
 }
 
+.scene-container{
+
+  transition:
+    opacity .6s steps(8);
+
+}
+
+.fade-out{
+  opacity:0;
+}
+
+.fade-in{
+  opacity:1;
+}
+
 .playlist-panel{
 
   position:absolute;
