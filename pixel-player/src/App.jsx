@@ -379,18 +379,13 @@ const [showScene, setShowScene] =
   onMouseMove={hidePanels}
 >
 
-  <div
-    style={{
-      opacity: isFading ? 0 : 1,
-      transition: "opacity 0.5s ease",
-      width: "100%",
-      height: "100%",
-    }}
-  >
-    <Scene
-      scene={currentScene}
-      vibe={currentVibe}
-    />
+<div
+  className={
+    isFading
+      ? "scene-container fade-out"
+      : "scene-container fade-in"
+  }
+>
   </div>
 
   </div>
@@ -500,10 +495,6 @@ const [showScene, setShowScene] =
           />
 
         
-            <Scene
-              scene={currentScene}
-              vibe={currentVibe}
-            />
           </div>
 
         <div className="equalizer">
@@ -603,14 +594,7 @@ const [showScene, setShowScene] =
   )
 }
 
-<div
-            className={
-              isFading
-                ? "scene-container fade-out"
-                : "scene-container fade-in"
-            }
-          >
-
+ <Scene
 {
   showClock && (
     <div className="pixel-clock">
@@ -618,8 +602,8 @@ const [showScene, setShowScene] =
     </div>
   )
 }
+  </div>
 
-        </div>
       </div>
 
       {/* LISTA DE MÚSICAS */}
