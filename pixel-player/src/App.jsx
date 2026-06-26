@@ -26,8 +26,7 @@ const [showScene, setShowScene] =
   const [showClock, setShowClock] =
   useState(true);
 
-  const [clock, setClock] =
-  useState("");
+  const clock = useClock();
 
   const [showSettings, setShowSettings] =
   useState(false);
@@ -59,8 +58,12 @@ const [showScene, setShowScene] =
   const [volume, setVolume] =
     useState(0.7);
 
-  const [isFading, setIsFading] =
-    useState(false);
+      const {
+        isFading,
+        changeVibe
+    }
+    =
+    useSceneTransition(setCurrentVibe);
 
     const [currentTime, setCurrentTime] =
   useState(0);
@@ -73,18 +76,6 @@ const [showScene, setShowScene] =
       scene.id === currentVibe.sceneId
   );
 
-  const changeVibe = (newVibe) => {
-    setIsFading(true);
-
-    setTimeout(() => {
-      setCurrentVibe(newVibe);
-
-      setTimeout(() => {
-        setIsFading(false);
-      }, 50);
-
-    }, 500);
-  };
 
   const playSong = () => {
     if (sound) {
@@ -184,103 +175,16 @@ const [showScene, setShowScene] =
     }
   };
 
-  useEffect(() => {
-
-    const interval =
-      setInterval(() => {
   
-        setClock(
-          new Date()
-            .toLocaleTimeString()
-        );
+  useKeyboardShortcuts({
+    playSong,
+    pauseSong,
+    nextSong,
+    prevSong,
+    sound
+});
   
-      }, 1000);
-  
-    return () =>
-      clearInterval(interval);
-  
-  }, []);
-
-  useEffect(() => {
-
-    if (!sound) return;
-  
-    sound.once("end", () => {
-  
-      if (repeat) {
-  
-        sound.play();
-  
-        return;
-      }
-  
-      nextSong();
-    });
-  
-    const interval = setInterval(() => {
-  
-      setCurrentTime(
-        sound.seek() || 0
-      );
-  
-      setDuration(
-        sound.duration() || 0
-      );
-  
-    }, 500);
-  
-    return () => {
-      clearInterval(interval);
-    };
-    
-  }, [
-    sound,
-    repeat,
-    shuffle,
-    currentSong
-  ]);
-
-  useEffect(() => {
-
-    const handleKeyDown = (e) => {
-  
-      if (e.code === "Space") {
-  
-        e.preventDefault();
-  
-        if (
-          sound &&
-          sound.playing()
-        ) {
-          pauseSong();
-        } else {
-          playSong();
-        }
-      }
-  
-      if (e.code === "ArrowRight") {
-        nextSong();
-      }
-  
-      if (e.code === "ArrowLeft") {
-        prevSong();
-      }
-    };
-  
-    window.addEventListener(
-      "keydown",
-      handleKeyDown
-    );
-  
-    return () => {
-  
-      window.removeEventListener(
-        "keydown",
-        handleKeyDown
-      );
-    };
-  
-  }, [
+  , [
     sound,
     currentSong,
     shuffle,
@@ -386,6 +290,19 @@ const [showScene, setShowScene] =
       : "scene-container fade-in"
   }
 >
+
+<div
+  className={
+    isFading
+      ? "scene-container fade-out"
+      : "scene-container fade-in"
+  }
+>
+  <Scene
+    scene={currentScene}
+    vibe={currentVibe}
+  />
+</div>
   </div>
 
   </div>
@@ -440,45 +357,14 @@ const [showScene, setShowScene] =
     alt=""
   />
 
-<div className="player-info">
-
-    <h2>{currentSong.title}</h2>
-
-    <p>{currentSong.artist}</p>
-
-    {
-  showVibe && (
-    <p>
-      Vibe: {currentVibe.name}
-    </p>
-  )
-}
-
-{
-  showScene && (
-    <p>
-      Cena: {currentScene.name}
-    </p>
-  )
-}
-
-    <p>
-      Faixa {
-        songs.findIndex(
-          song => song.id === currentSong.id
-        ) + 1
-      } de {songs.length}
-    </p>
-
-  </div>
-
-  <div
-  className={
-    status === "Tocando"
-      ? "equalizer playing"
-      : "equalizer"
-  }
-></div>
+<PlayerInfo
+    currentSong={currentSong}
+    currentScene={currentScene}
+    currentVibe={currentVibe}
+    songs={songs}
+    showVibe={showVibe}
+    showScene={showScene}
+/>
 
   </div>
 
@@ -594,7 +480,6 @@ const [showScene, setShowScene] =
   )
 }
 
- <Scene
 {
   showClock && (
     <div className="pixel-clock">
